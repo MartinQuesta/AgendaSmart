@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import apiCRUD from '../services/apiCRUD.js'
 
 // useStore could be anything like useUser, useCart
 // the first argument is a unique id of the store across your application
@@ -6,16 +7,25 @@ export const useStore = defineStore('main', {
   
     state: () => {
         return { listaTareasDiaria: [],
-                 listaTareasSemanales: [] }
+                 listaTareasSemanales: [],
+                 listaTareasOrdenadas: [] }
     },
     actions: {
-        agregarTareaDiaria(tarea){
-        this.listaTareasDiaria.push(tarea)
-        console.log('agrego una Tarea');
+        getTareasDiarias(){
+            return this.listaTareasDiaria = apiCRUD.getTareasDiaras()
         },
-        agregarTareaSemanal(tarea){
-            this.listaTareasSemanales.push(tarea)
-            console.log('agrego una Tarea');
+        getTareasSemanales(){
+            return this.listaTareasSemanales = apiCRUD.getTareasSemanales()
+        },
+        setTareasDiarias(tarea){
+            return apiCRUD.setTareasDiarias(tarea)
+            },
+        setTareasSemanales(tarea){
+            return apiCRUD.setTareasSemanales(tarea)
+            },
+        setOrderTareasDiarias(lista){
+            const newLista = apiCRUD.setOrderTareasDiarias(lista)
+            return newLista
             }
     },
     // other options...

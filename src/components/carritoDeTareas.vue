@@ -1,30 +1,36 @@
 <template>
   
 <div>
-    <h2>Carrito de Tareass</h2>
+    <h2>Lista de Tareass</h2>
+    {{listaTareasDiariaApi}}
+    <button @click="updateLista">Traer Tareas </button>
 
     <ul id="lista">
-        <li v-for="tarea in listaTareasDiaria" :key="tarea.id">
+        <li v-for="tarea in listaTareasDiariasApi" :key="tarea.id">
                ID: {{ tarea.id }} | Descripcion: {{ tarea.desc }} | Prioridad: {{ tarea.prioridad }}
         </li>
     </ul>
 
-        <ul id="lista">
+     <ul id="lista">
         <li v-for="tarea in listaTareasSemanales" :key="tarea.id">
                ID: {{ tarea.id }} | Descripcion: {{ tarea.desc }} | Prioridad: {{ tarea.prioridad }}
         </li>
     </ul>
-
-   <!-- <button @click="agregarObjeto">Agregar Tarea</button> -->
 </div>
-
 </template>
 
 <script>
 import {useStore} from '../store/storeTareas.js'
 import {storeToRefs} from 'pinia'
 
+
 export default {
+    data(){
+        return{
+            listaTareasDiariasApi:[],
+            newTarea:{id:0, desc:'', prioridad:0}
+        }
+    },
     setup(){
         const store = useStore()
         const {listaTareasDiaria} = storeToRefs(store)
@@ -33,17 +39,20 @@ export default {
             store,listaTareasDiaria,listaTareasSemanales
         }
     },
-    methods:{
-        agregar(){
-            console.log('llego al metodo');
-            this.store.agregarTarea()
-        },
-        agregarObjeto(){
-            console.log('llego al metodo');
-            this.store.agregarTareaConObj({id:1,desc:"Tarea1"})
+    created: async function (){
+        try{
+            this.updateLista()
+        }catch(err){
+            console.log(err);
+            this.mensajeError = 'Hubo un error'
         }
+    },
+    methods:{
+        async updateLista (){
+            const rta = await this.store.getTareasDiarias()
+            this.listaTareasDiariasApi = rta.data
+        }        
     }
-
 }
 </script>
 

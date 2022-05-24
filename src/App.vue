@@ -14,7 +14,7 @@
         <router-link to="/about"> Go to About | </router-link>
         <router-link to="/tareas"> Tareas</router-link>
         <router-link to="/gestiontarea"> | Gestion Tareas |</router-link>
-        <router-link to="/carritodetareas"> Carritos de Tareas |</router-link>
+        <router-link to="/carritodetareas"> Lista de Tareas |</router-link>
      </p>
   <router-view></router-view>
     </div>
