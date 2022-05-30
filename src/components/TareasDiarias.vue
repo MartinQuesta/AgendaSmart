@@ -3,17 +3,19 @@
 <div>
     <div><h2>Tareas Diarias</h2></div>
         <ul id="lista">
-        <li v-for="tarea in listaTareasDiariasApiOrdenada.data" :key="tarea.id">
-              ID: {{ tarea.id }} | Descripcion: {{ tarea.desc }} | Prioridad: {{ tarea.prioridad }} | palabraClave:{{tarea.palabraClave}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.atrasada}} | cantRep: {{tarea.cantRep}}
+        <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id">
+              Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}
         </li>
     </ul>
     <form action="agregarTarea">
-        ID: <input type="number" v-model="newTarea.id"><br>
-        Descripcion: <input type="text" v-model="newTarea.desc"><br>
-        Prioridad: <input type="number" id='prioridad' v-model="newTarea.prioridad"><input type="range" min='1' max='10' v-model="newTarea.prioridad"><br>
-        Palabras Claves: <input type="text" v-model="newTarea.palabraClave"><br>
+        <!-- ID: <input type="number" v-model="newTarea._id"><br> -->
+        Titulo: <input type="text" v-model="newTarea.title"><br>
+        Descripcion: <input type="text" v-model="newTarea.description"><br>
+        Prioridad: <input type="number" id='prioridad' v-model="newTarea.priority"><input type="range" min='1' max='10' v-model="newTarea.priority"><br>
+        Palabras Claves: <input type="text" v-model="newTarea.keyWords"><br>
         motivado: <input type="checkbox" value='true' v-model="newTarea.motiv"><br>
-        cantidad de repeticiones: <input type="number" id='cantRep' v-model="newTarea.cantRep"><input type="range" min='0' max='5' v-model="newTarea.cantRep"><br>
+        isDaily: <input type="checkbox" value='true' v-model="newTarea.meta.isDaily"><br>
+        cantidad de repeticiones: <input type="number" id='cantRep' v-model="newTarea.meta.countRep"><input type="range" min='0' max='5' v-model="newTarea.meta.countRep"><br>
         <input type="reset">
     </form>
      
@@ -24,7 +26,7 @@
 
     <ul id="lista">
         <li v-for="tarea in listaTareasDiariasApi" :key="tarea.id">
-              ID: {{ tarea.id }} | Descripcion: {{ tarea.desc }} | Prioridad: {{ tarea.prioridad }} | palabraClave:{{tarea.palabraClave}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.atrasada}} | cantRep: {{tarea.cantRep}}
+              ID: {{ tarea._id }} | Descripcion: {{ tarea.description }} | Prioridad: {{ tarea.priority }} | palabraClave: {{tarea.keyWords}} | motiv: {{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | isDaily: {{tarea.meta.isDaily}} | cantRep: {{tarea.meta.countRep}}
         </li>
     </ul>
 </div>
@@ -34,6 +36,7 @@
 <script>
 import {useStore} from '../store/storeTareas.js'
 import {storeToRefs} from 'pinia'
+import taskmodel from '../models/taskmodel.js'
 
 export default {
     setup(){
@@ -49,7 +52,7 @@ export default {
             listaTareasDiariasApi: [],
             listaTareasDiariasApiOrdenada:[],
             mensajeError: '',
-            newTarea:{id:0, desc:'', prioridad:0, palabraClave:'', motiv:'false', atrasada:'0',cantRep:'0', esDia: 'false'}
+            newTarea:{_id:0, date:'', description:'',keyWords: [], priority: 1, title:'', motiv:'true',meta:{ completed: 'false', isDelayed:'false',countRep:'0', isDaily: 'true'}}
         }
     },
     created: async function (){
@@ -64,6 +67,7 @@ export default {
         async agregarTarea(){
             try{
                 const tarea = {...this.newTarea}
+                tarea.date = Date.now
                 await this.store.setTareasDiarias(tarea)
                 this.updateLista()
             }catch(err){
@@ -76,30 +80,17 @@ export default {
             this.store.agregarTareaDiaria({...this.newTarea})
         },
         async updateLista (){
-            const backList = []
-            //backList = rta.data
             const rta = await this.store.getTareasDiarias()
-            this.listaTareasDiariasApi = rta.data
-            this.listaTareasDiariasApiOrdenada = await this.store.setOrderTareasDiarias({...this.listaTareasDiariasApi})
+            console.log(rta);
+            console.log(rta.data);
+            this.listaTareasDiariasApi = await rta.data
+            console.log(this.listaTareasDiariasApi[1]);
+            //this.listaTareasDiariasApiOrdenada = await this.store.setOrderTareasDiarias({...this.listaTareasDiariasApi})
+            this.listaTareasDiariasApiOrdenada = this.listaTareasDiariasApi
             this.updateListaBeta()
-            //porque la lista Api no se ordena, y la ordenada sii???
-            //backList = rta.data
-            //backList = await this.store.setOrderTareasDiarias({...this.listaTareasDiariasApi})
-            //this.listaTareasDiariasApi = []
-            //this.listaTareasDiariasApi = this.listaTareasDiariasApiOrdenada
         },
         async updateListaBeta (){
-            /*console.log('estoy en la BETA');
-            const backList = []
-            const rta = await this.store.getTareasDiarias()
-            backList = await rta.data
-            console.log('rta.dataaaaaaaaaaaaaaaa');
-            console.log(backList);
-            //backList = rta.data
-            */
             this.listaTareasDiariasApi  = []
-            //this.listaTareasDiariasApi = []
-            //this.listaTareasDiariasApi = this.listaTareasDiariasApiOrdenada
         }
     }
 }

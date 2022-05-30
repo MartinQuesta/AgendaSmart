@@ -23,8 +23,8 @@ export const useStore = defineStore('main', {
         setTareasSemanales(tarea){
             return apiCRUD.setTareasSemanales(tarea)
             },
-        setOrderTareasDiarias(lista){
-            const newLista = apiCRUD.setOrderTareasDiarias(lista)
+        setOrderTareasDiarias(){
+            const newLista = apiCRUD.setOrderTareasDiarias()
             return newLista
             }
     },

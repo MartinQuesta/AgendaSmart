@@ -10,19 +10,21 @@ const apiClient = Axios.create({
 
 export default{
     getTareasDiaras(){
-        return apiClient.get('/api/gettareas/diarias')
+        return apiClient.get('/api/tareas')
     },
     setTareasDiarias(tarea){
-        return apiClient.post('/api/settareas/diarias', tarea)
+        return apiClient.post('/api/tareas', tarea)
     },
+    /*
     getTareasSemanales(){
-        return apiClient.get('/api/gettareas/semanales')
+        return apiClient.get('/api/')
     },
     setTareasSemanales(tarea){
         return apiClient.post('/api/settareas/semanales', tarea)
     },
+    */
     setOrderTareasDiarias(lista){
         console.log(`apiCRUD Ordenadas:${lista}`);
-        return apiClient.post('/api/gettareas/ordenadas', lista)
+        return apiClient.get('/api/lists')
     }
 }
