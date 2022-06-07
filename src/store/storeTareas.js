@@ -18,7 +18,12 @@ export const useStore = defineStore('main', {
             return this.listaTareasSemanales = apiCRUD.getTareasSemanales()
         },
         setTareasDiarias(tarea){
-            return apiCRUD.setTareasDiarias(tarea)
+            const newList = apiCRUD.setTareasDiarias(tarea)
+            console.log(newList);
+            return newList
+            },
+        borrarTareaDiaria(id){
+            return apiCRUD.borrarTareaDiaria(id)
             },
         setTareasSemanales(tarea){
             return apiCRUD.setTareasSemanales(tarea)

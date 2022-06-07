@@ -25,16 +25,21 @@
 @import './assets/base.css';
 
 #app {
-  max-width: 1280px;
+  /* max-width: 1280px; */
+    height: 100vh;
+     display: flex;
+    flex-direction: column;
   margin: 0 auto;
   padding: 2rem;
 
-  font-weight: normal;
+  font-weight:normal;
+  font-size:x-large;
+
 }
 
 header {
   line-height: 1.5;
-}
+  }
 
 .logo {
   display: block;

@@ -1,6 +1,6 @@
 <template>
   
-<div>
+<div id="tareas">
     <!-- <div></div>
     <div v-if="listaTareasDiariasApiOrdenada[17].meta.isDaily == true">
         <h2>Tareas Diarias</h2>
@@ -9,15 +9,17 @@
         <h2>Tareas Semanales</h2>
     </div> -->
     <button @click="() => togglePopup('buttonTrigger')">Start Pomodoro</button>
-    <Pomodoro class="popup" v-if="pomodoroTriggers.buttonTrigger">
-        <h2>My PopUp</h2>
+    <Pomodoro class="popup" v-if="pomodoroTriggers.buttonTrigger" 
+    :togglePopup = "() => togglePopup('buttonTrigger')">
+        <h2>My PopUp 🍅</h2>
     </Pomodoro>
-    <Pomodoro class="popup" v-if="pomodoroTriggers.timerTrigger">
+    <Pomodoro class="popup" v-if="pomodoroTriggers.timerTrigger" 
+    :togglePopup = "() => togglePopup('timerTrigger')">
         <h2>My TImer PopUp</h2>
     </Pomodoro>
 
-        <div><h2>Tareas Diarias</h2></div>
-        <ul id="lista">
+    <ul id="lista">
+        <div><h2>Tareas Pendientes</h2></div>
         <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id">
               Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}
         </li>
@@ -27,11 +29,11 @@
     <button @click="eliminarTarea">Eliminar Tarea</button>
     {{ mensajeError }}
 
-    <ul id="lista">
+    <!-- <ul id="lista">
         <li v-for="tarea in listaTareasDiariasApi" :key="tarea.id">
               Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}
         </li>
-    </ul>
+    </ul> -->
 </div>
 
 </template>
@@ -40,12 +42,13 @@
 import {useStore} from '../store/storeTareas.js'
 import {storeToRefs} from 'pinia'
 import Pomodoro from './Pomodoro.vue'
-import { ref } from '@vue/reactivity'
+import { ref } from 'vue'
 
 
 export default {
     setup() {
         const store = useStore();
+        //const timer = [07,00]
         const { listaTareasDiarias } = storeToRefs(store);
         const pomodoroTriggers = ref({
             buttonTrigger: false,
@@ -53,15 +56,17 @@ export default {
         });
         const togglePopup = (trigger) => {
                 pomodoroTriggers.value[trigger] = !pomodoroTriggers.value[trigger]
-
-        }
+        };
+        setTimeout(() => {
+            pomodoroTriggers.value.timerTrigger = true
+        },3000);
         //this.togglePopup(trigger);
         return {
             store,
             listaTareasDiarias,
             Pomodoro,
             pomodoroTriggers,
-            togglePopup
+            togglePopup,
         };
     },
     data() {
@@ -135,9 +140,36 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#tareas{
+     position:fixed;
+
+    // margin: 0;
+     padding-right: 15rem;
+    // position: absolute;
+
+     //position: fixed;
+    // top: 0;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+     //z-index: 99;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .popup{
     text-decoration-color: rgb(12, 14, 13);
     text-emphasis-color: rgb(0,0,0);
 }
 
+button{
+    margin-top: 20px;
+    width: 200px;
+    height: 38px;
+    background: #FFF;
+    border-radius: 30px;
+    cursor:pointer;
+}
 </style>
