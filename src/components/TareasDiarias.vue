@@ -11,7 +11,9 @@
             
         </li>
     </ul>
-    <form class="formulario" action="agregarTarea">
+    <!-- <form class="formulario" action="agregarTarea"> -->
+    <form class="formulario" @submit.prevent="agregarTarea">
+
         <h3>Agregar Tarea:</h3>
         <!-- ID: <input type="number" v-model="newTarea._id"><br> -->
         Titulo: <input type="text" v-model="newTarea.tittle"><br>
@@ -21,10 +23,11 @@
         Palabras Claves: <input type="text" v-model="newTarea.keyWords"><br>
         motivado: <input type="checkbox" value='true' v-model="newTarea.motiv"><br>
         isDaily: <input type="checkbox" value='true' v-model="newTarea.meta.isDaily"><br>
-        <!-- Repeticiones: <input type="number" id='countRep' v-model="newTarea.meta.countRep"> -->
+        Repeticiones: <input type="number" id='countRep' v-model="newTarea.meta.countRep">
         <!-- <input type="range" min='0' max='5' v-model="newTarea.meta.countRep"><br> -->
         <!-- <input type="reset"> -->
     <button @click="agregarTarea">Agregar Tarea</button>
+    
     <button @click="updateListaBeta">Traer Tarea</button>
     </form>
      
@@ -59,7 +62,7 @@ export default {
             listaTareasDiariasApi: [],
             listaTareasDiariasApiOrdenada:[],
             mensajeError: '',
-            newTarea:{tittle:'Agregar Titulo', description:'Descripcion',keyWords: [], date: Date.now(), priority: 1, motiv:true,meta:{ completed: false, isDelayed:false, isDaily: true, countRep:0}}
+            newTarea:{_id:0,tittle:'Agregar Titulo', description:'Descripcion',keyWords: [], priority: 1, motiv:true,meta:{ completed: false, isDelayed:false, isDaily: true, countRep:0}}
         }
     },
     created: async function (){
@@ -76,12 +79,11 @@ export default {
                 console.log('TareasDiarais: Agregando Tarea (1)');
                 const tarea = {...this.newTarea}
                 console.log(`TareasDiarias:tarea`);
-                console.log(tarea);
                 //tarea.date = Date.now
                 const rta = this.store.setTareasDiarias(tarea)
                 console.log(rta);
                 console.log('TareasDiarias: Despues de SetTareas y comienza Update');
-                //this.updateLista()
+                this.updateLista()
             }catch(err){
                 console.log(err);
                 this.mensajeError = 'Tarea Diaria,Hubo un error'

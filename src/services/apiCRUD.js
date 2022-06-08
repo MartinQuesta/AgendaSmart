@@ -14,7 +14,7 @@ export default{
         return apiClient.get('/api/tareas')
     },
     setTareasDiarias(tarea){
-        apiClient.post('/api/tareas', tarea)
+        fetch(apiClient.post('/api/tareas', tarea))
         .then(response => {
             console.log('ANDUVO');
             console.log(response);
@@ -22,6 +22,7 @@ export default{
         })
         .catch(err => {
             console.log('apiCRUD - SetTareas HAY ERROR');
+            console.log(tarea);
             console.log(err.response);
             console.error(err);
             return err
