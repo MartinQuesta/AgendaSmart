@@ -102,9 +102,9 @@
 </template>
 
 <script>
-import ProgressBar from "progressbar.js";
+//import ProgressBar from "progressbar.js";
 import beep from "../assets/beep.mp3";
-import confetti from "canvas-confetti";
+//import confetti from "canvas-confetti";
 
 export default {
     name: 'Pomodoro',

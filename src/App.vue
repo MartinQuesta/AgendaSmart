@@ -8,18 +8,50 @@
 
 <template>
     <div>
-      <p>
-    <!-- `<router-link>` will render an `<a>` tag with the correct `href` attribute -->
-       <router-link to="/">| Home | </router-link>
+      {{ isLogged }}
+    
+      <div v-if="!isLogged">
+        <router-link to="/">| Home | </router-link>
+        <router-link to="/about"> Go to About | </router-link>
+        <router-link to="/login"> Login |</router-link>
+      </div>
+      <div v-if="isLogged">
+        <router-link to="/">| Home | </router-link>
         <router-link to="/about"> Go to About | </router-link>
         <router-link to="/tareas"> Tareas</router-link>
         <router-link to="/gestiontarea"> | Gestion Tareas |</router-link>
         <router-link to="/carritodetareas"> Lista de Tareas |</router-link>
-     </p>
+      </div>
+      
+    <!-- `<router-link>` will render an `<a>` tag with the correct `href` attribute -->
+       
+        
+
+    
   <router-view></router-view>
     </div>
 
 </template>
+
+<script>
+import {userStore} from '../src/store/user.js'
+import {storeToRefs} from 'pinia'
+
+
+export default {
+    setup(){
+        const store = userStore()
+        const { user, isLogged } = storeToRefs(store)
+        return{
+            store,
+            user,
+            isLogged
+        }
+    }
+    
+}
+
+</script>
 
 <style>
 @import './assets/base.css';
