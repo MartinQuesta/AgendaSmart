@@ -32,6 +32,7 @@ export const useStore = defineStore('main', {
             const newLista = apiCRUD.setOrderTareasDiarias()
             return newLista
             }
+        
     },
     // other options...
 })

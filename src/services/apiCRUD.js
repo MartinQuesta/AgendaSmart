@@ -1,4 +1,6 @@
 import Axios from "axios";
+import { get } from "immutable";
+import { useRoute } from "vue-router";
 
 const apiClient = Axios.create({
     baseURL: 'http://127.0.0.1:3500/',
@@ -42,5 +44,18 @@ export default{
     setOrderTareasDiarias(lista){
         console.log(`apiCRUD Ordenadas:${lista}`);
         return apiClient.get('/api/lists')
+    },
+    setUser(user){
+        console.log(user)
+        apiClient.post('/register', user)
+    },
+    validateUser(user){
+        console.log(user)
+        const valid = apiClient.post('/login', user)
+        if (valid) {
+            return true
+        } else {
+            return false
+        }
     }
 }

@@ -1,39 +1,47 @@
 <template>
   <div>
-      <h2>Login</h2>
-      email <input type="email" v-model="user.email">
-      password <input type="password" v-model="user.password">
-      <button @click="login">Login</button>
+    <h2>Login</h2>
+      <form class="formulario" @submit.prevent="login">
+
+  
+        <!-- ID: <input type="number" v-model="newTarea._id"><br> -->
+        <ul>
+          <li> Email: <input placeholder="email" type="email" v-model="user.email"></li>
+          <li>Contraseña: <input placeholder="password" type="password" v-model="user.password"></li>
+        </ul>
+        <!-- <input type="range" min='0' max='5' v-model="newTarea.meta.countRep"><br> -->
+        <!-- <input type="reset"> -->
+      </form>
+    <button @click="login">Login</button>
   </div>
 </template>
 
 
 
 <script>
-import { usuarioStore } from '../store/user.js'
+import { userStore } from '../store/user.js'
 import { storeToRefs } from 'pinia'
 
 export default {
    setup() {
-    const store = usuarioStore();
-    const {estaLogeado}  = storeToRefs(store);
-    const {registerUser} = store;
+    const store = userStore();
+    const {isLogged}  = storeToRefs(store);
     return {
-      store, registerUser, estaLogeado
+      store, isLogged
     }
   },
   data() {
     return {
-      usuario : {email: "", password: ""},
+      user : {email: "", password: ""},
       mensajeDeError : ''
     }
   },
   methods: {
-    async login() {
+    login(user) {
       try {
-        await this.registerUser({...this.usuario})
-        if (this.estaLogeado) {
-          this.$router.push('/vendedor')
+        this.isLogged = this.store.login(user)
+        if (this.isLogged) {
+          this.$router.push('/tareas')
         } else {
           this.mensajeDeError = "Usuario o password inconrrecto"  
         }

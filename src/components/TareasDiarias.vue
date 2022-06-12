@@ -75,17 +75,11 @@ export default {
     },
     methods:{
         async agregarTarea(){
-            try{
-                console.log('TareasDiarais: Agregando Tarea (1)');
-                const tarea = {...this.newTarea}
-                console.log(`TareasDiarias:tarea`);
-                //tarea.date = Date.now
-                const rta = this.store.setTareasDiarias(tarea)
-                console.log(rta);
-                console.log('TareasDiarias: Despues de SetTareas y comienza Update');
+            try{                
+                const tarea = {...this.newTarea}               
+                const rta = this.store.setTareasDiarias(tarea)                
                 this.updateLista()
-            }catch(err){
-                console.log(err);
+            }catch(err){                
                 this.mensajeError = 'Tarea Diaria,Hubo un error'
             }
         },

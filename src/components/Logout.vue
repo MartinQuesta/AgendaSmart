@@ -6,10 +6,10 @@
 </template>
 
 <script>
-import {usuarioStore} from '../store/user.js'
+import {userStore} from '../store/user.js'
 export default {
   setup() {
-    const store = usuarioStore();
+    const store = userStore();
     const {userLogout} = store;
     return {
       store, userLogout

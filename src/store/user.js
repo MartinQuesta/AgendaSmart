@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import apiCRUD from '../services/apiCRUD.js'
 
 
 // useStore could be anything like useUser, useCart
@@ -14,6 +15,10 @@ export const userStore = defineStore('main', {
     actions: {
         login(user) {
             console.log(user)
+            return apiCRUD.validateUser(user)
+        },
+        setUser(user){
+            return apiCRUD.setUser(user)
         }
     },
     // other options...

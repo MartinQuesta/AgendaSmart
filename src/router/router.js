@@ -10,12 +10,13 @@ import TareasSemanales from '../components/TareasSemanales.vue'
 import CarritoDeTareas from '../components/carritoDeTareas.vue'
 import Login from '../components/Login.vue'
 import Logout from '../components/Logout.vue'
+import Register from '../components/Register.vue'
 
 const routes = [
     { path: '/', component: Home },
     { path: '/login', component: Login },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
-
+    { path: '/register', component: Register},
     { path: '/tareas', component: Tareas},
     { path: '/tareasdiarias', component: TareasDiarias},
     { path: '/tareassemanales', component: TareasSemanales},
