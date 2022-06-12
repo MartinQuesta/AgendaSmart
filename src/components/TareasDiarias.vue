@@ -12,7 +12,7 @@
         </li>
     </ul>
     <!-- <form class="formulario" action="agregarTarea"> -->
-    <form class="formulario" @submit.prevent="agregarTarea">
+    <form class="formulario" @submit.prevent>
 
         <h3>Agregar Tarea:</h3>
         <!-- ID: <input type="number" v-model="newTarea._id"><br> -->
@@ -28,7 +28,7 @@
         <!-- <input type="reset"> -->
     <button @click="agregarTarea">Agregar Tarea</button>
     
-    <button @click="updateListaBeta">Traer Tarea</button>
+    <button @click="updateLista">Traer Tarea</button>
     </form>
      
 
@@ -76,32 +76,29 @@ export default {
     methods:{
         async agregarTarea(){
             try{
-                console.log('TareasDiarais: Agregando Tarea (1)');
                 const tarea = {...this.newTarea}
-                console.log(`TareasDiarias:tarea`);
-                //tarea.date = Date.now
-                const rta = this.store.setTareasDiarias(tarea)
-                console.log(rta);
-                console.log('TareasDiarias: Despues de SetTareas y comienza Update');
-                this.updateLista()
+                this.store.setTareasDiarias(tarea)
+                await this.updateLista()
             }catch(err){
                 console.log(err);
                 this.mensajeError = 'Tarea Diaria,Hubo un error'
             }
+                this.updateLista()
+
         },
        eliminarTarea(id){
             this.store.borrarTareaDiaria(id)
         },
         async updateLista (){
             const rta = await this.store.getTareasDiarias()
-            this.listaTareasDiariasApi = await rta.data
-            console.log(rta);
-            //this.listaTareasDiariasApiOrdenada = await this.store.setOrderTareasDiarias({...this.listaTareasDiariasApi})
-            this.listaTareasDiariasApiOrdenada = this.listaTareasDiariasApi
+            this.listaTareasDiariasApiOrdenada = await rta.data
             this.updateListaBeta()
         },
         async updateListaBeta (){
             this.listaTareasDiariasApi  = []
+        },
+        filtroTareasDiarias(tareas){
+            
         }
     }
 }
