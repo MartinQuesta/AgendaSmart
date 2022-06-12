@@ -37,8 +37,9 @@ export default {
     }
   },
   methods: {
-    login(user) {
+    login() {
       try {
+        const user = {...this.user} 
         this.isLogged = this.store.login(user)
         if (this.isLogged) {
           this.$router.push('/tareas')
