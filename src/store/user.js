@@ -13,9 +13,11 @@ export const userStore = defineStore('main', {
         }
     },
     actions: {
-        login(user) {
+        async login(user) {
             console.log(user)
-            return apiCRUD.validateUser(user)
+            const result = await apiCRUD.validateUser(user)
+            console.log(await result);
+            this.isLogged = result
         },
         setUser(user){
             return apiCRUD.setUser(user)

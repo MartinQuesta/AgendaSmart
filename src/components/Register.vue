@@ -9,8 +9,8 @@
         <ul>
           <li> Email: <input placeholder="email" type="email" v-model="user.email"></li>
           <li>Contraseña: <input placeholder="password" type="password" v-model="user.password"></li>
-          <li>Nombre: <input placeholder="nombre y apellido" type="text" id='priority' v-model="user.name"></li>
-          <li>Edad: <input placeholder="edad" type="number" id='priority' v-model="user.age"></li>
+          <li>Nombre: <input placeholder="nombre y apellido" type="text" id='priority' v-model="user.nombre"></li>
+          <li>Edad: <input placeholder="edad" type="number" id='priority' v-model="user.edad"></li>
         </ul>
         <!-- <input type="range" min='0' max='5' v-model="newTarea.meta.countRep"><br> -->
         <!-- <input type="reset"> -->
@@ -37,7 +37,7 @@ export default {
   },
   data() {
     return {
-      user : {email: "", password: "", age: '', name: ""},
+      user : {nombre:"Nombre1", apellido:"apellido1", edad: 20, email: "mail1@mail.com", password: "123456", role:"ADMIN"},
       mensajeDeError : ''
     }
   },

@@ -47,15 +47,24 @@ export default{
     },
     setUser(user){
         console.log(user)
-        apiClient.post('/register', user)
+        return apiClient.post('/register', user)
     },
-    validateUser(user){
+    async validateUser(user){
         console.log(user)
-        const valid = apiClient.post('/login', user)
-        if (valid) {
-            return true
-        } else {
-            return false
-        }
+        let valid = false
+        // const valid = 
+        await apiClient.post('/login', user)
+        .then(response => {
+            console.log('ANDUVOLogin');
+            console.log(response.data.token);
+            valid = true
+        })
+        .catch(err => {
+            console.log('apiCRUD - login HAY ERROR');
+            console.error(err);
+            valid = false
+        })
+        console.log(valid);
+        return valid
     }
 }

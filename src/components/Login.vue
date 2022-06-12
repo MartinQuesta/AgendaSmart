@@ -37,11 +37,14 @@ export default {
     }
   },
   methods: {
-    login() {
+    async login() {
       try {
         const user = {...this.user} 
-        this.isLogged = this.store.login(user)
-        if (this.isLogged) {
+        const response = await this.store.login(user)
+        //console.log(response);
+        console.log(this.isLogged);
+
+      if (this.isLogged) {
           this.$router.push('/tareas')
         } else {
           this.mensajeDeError = "Usuario o password inconrrecto"  
