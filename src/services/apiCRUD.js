@@ -11,9 +11,23 @@ const apiClient = Axios.create({
 })
 
 export default{
-    getTareasDiaras(){
+    async getTareasDiaras(userID){
+        let res
         console.log('apiCRUD: GET-TAREAS');
-        return apiClient.get('/api/tareas')
+        await apiClient.get('/api/tareas/'+userID)
+        .then(response => {
+            console.log('ANDUVO');
+            res = response;
+        })
+        .catch(err => {
+            console.log('apiCRUD - SetTareas HAY ERROR');
+            console.log(tarea);
+            console.log(err.response);
+            console.error(err);
+            res = err
+        })
+        console.log(res);
+        return res
     },
     setTareasDiarias(tarea){
         fetch(apiClient.post('/api/tareas', tarea))
@@ -30,8 +44,9 @@ export default{
             return err
         })
     },
-    borrarTareaDiaria(id){
-        return apiClient.delete('/api/tareas/'+id)
+    borrarTareaDiaria(userID,id){
+        console.log(userID);
+        return apiClient.delete('/api/tareas/',{params:{'userID':userID, 'id':id}})
     },
     /*
     getTareasSemanales(){

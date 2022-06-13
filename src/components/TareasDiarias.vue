@@ -3,16 +3,19 @@
   
 <div id="tareas">
         <ul id="lista">
-        <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id">
-              Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}
+        <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id"></li>
+              <li>Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | </li>
+              <li> Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}</li>
+              <li>UserID: {{tarea.meta.userData.userID}} </li>
             <button @click="eliminarTarea(tarea._id)">Anular Tarea</button>
-        </li>
+        
+        
         <li>
             
         </li>
     </ul>
     <!-- <form class="formulario" action="agregarTarea"> -->
-    <form class="formulario" @submit.prevent="agregarTarea">
+    <form class="formulario" @submit.prevent>
 
         <h3>Agregar Tarea:</h3>
         <!-- ID: <input type="number" v-model="newTarea._id"><br> -->
@@ -24,11 +27,12 @@
         motivado: <input type="checkbox" value='true' v-model="newTarea.motiv"><br>
         isDaily: <input type="checkbox" value='true' v-model="newTarea.meta.isDaily"><br>
         Repeticiones: <input type="number" id='countRep' v-model="newTarea.meta.countRep">
+        Usuario: <input type="text" id='userID' v-model="newTarea.meta.userData.userID">
         <!-- <input type="range" min='0' max='5' v-model="newTarea.meta.countRep"><br> -->
         <!-- <input type="reset"> -->
     <button @click="agregarTarea">Agregar Tarea</button>
     
-    <button @click="updateListaBeta">Traer Tarea</button>
+    <button @click="updateLista">Traer Tarea</button>
     </form>
      
 
@@ -62,7 +66,7 @@ export default {
             listaTareasDiariasApi: [],
             listaTareasDiariasApiOrdenada:[],
             mensajeError: '',
-            newTarea:{_id:0,tittle:'Agregar Titulo', description:'Descripcion',keyWords: [], priority: 1, motiv:true,meta:{ completed: false, isDelayed:false, isDaily: true, countRep:0}}
+            newTarea:{_id:0,tittle:'Titulo', description:'Descripcion',keyWords: [], priority: 1, motiv:true,meta:{ completed: false, isDelayed:false, isDaily: true, countRep:0, userData:{userID:'user2',userToken:'0101'}}}
         }
     },
     created: async function (){
@@ -75,27 +79,35 @@ export default {
     },
     methods:{
         async agregarTarea(){
-            try{                
-                const tarea = {...this.newTarea}               
-                const rta = this.store.setTareasDiarias(tarea)                
-                this.updateLista()
-            }catch(err){                
+            try{
+                const tarea = {...this.newTarea}
+                this.store.setTareasDiarias(tarea)
+                await this.updateLista()
+            }catch(err){
+                console.log(err);
                 this.mensajeError = 'Tarea Diaria,Hubo un error'
             }
+                this.updateLista()
+
         },
        eliminarTarea(id){
-            this.store.borrarTareaDiaria(id)
+            const userID = this.newTarea.meta.userData.userID
+            this.store.borrarTareaDiaria(userID,id)
         },
         async updateLista (){
-            const rta = await this.store.getTareasDiarias()
-            this.listaTareasDiariasApi = await rta.data
+            const tarea = {...this.newTarea}
+            console.log(tarea.meta.userData.userID);
+            const userId = tarea.meta.userData.userID;
+            const rta = await this.store.getTareasDiarias(userId)
             console.log(rta);
-            //this.listaTareasDiariasApiOrdenada = await this.store.setOrderTareasDiarias({...this.listaTareasDiariasApi})
-            this.listaTareasDiariasApiOrdenada = this.listaTareasDiariasApi
+            this.listaTareasDiariasApiOrdenada = rta.data
             this.updateListaBeta()
         },
         async updateListaBeta (){
             this.listaTareasDiariasApi  = []
+        },
+        filtroTareasDiarias(tareas){
+            
         }
     }
 }

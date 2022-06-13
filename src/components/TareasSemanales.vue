@@ -1,25 +1,42 @@
 <template>
+    <h2>Tareas Semanales</h2>
   
-<div>
-    <div><h2>Tareas Semamales</h2></div>
-    <form action="agregarTarea">
-        ID: <input type="number" v-model="newTarea.id"><br>
-        Descripcion: <input type="text" v-model="newTarea.desc"><br>
-        Prioridad: <input type="number" id='prioridad' v-model="newTarea.prioridad"><input type="range" min='1' max='10' v-model="newTarea.prioridad"><br>
-        Palabras Claves: <input type="text" v-model="newTarea.palabraClave"><br>
+<div id="tareas">
+        <ul id="lista">
+        <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id">
+              Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}
+            <button @click="eliminarTarea(tarea._id)">Anular Tarea</button>
+        </li>
+        <li>
+            
+        </li>
+    </ul>
+    <!-- <form class="formulario" action="agregarTarea"> -->
+    <form class="formulario" @submit.prevent="agregarTarea">
+
+        <h3>Agregar Tarea:</h3>
+        <!-- ID: <input type="number" v-model="newTarea._id"><br> -->
+        Titulo: <input type="text" v-model="newTarea.tittle"><br>
+        Descripcion: <input type="text" v-model="newTarea.description"><br>
+        Prioridad: <input type="number" id='priority' v-model="newTarea.priority">
+        <!-- <input type="range" min='1' max='10' v-model="newTarea.priority"><br> -->
+        Palabras Claves: <input type="text" v-model="newTarea.keyWords"><br>
         motivado: <input type="checkbox" value='true' v-model="newTarea.motiv"><br>
-        cantidad de repeticiones: <input type="number" id='cantRep' v-model="newTarea.cantRep"><input type="range" min='0' max='5' v-model="newTarea.cantRep"><br>
-        <input type="reset">
+        isDaily: <input type="checkbox" value='true' v-model="newTarea.meta.isDaily"><br>
+        Repeticiones: <input type="number" id='countRep' v-model="newTarea.meta.countRep">
+        <!-- <input type="range" min='0' max='5' v-model="newTarea.meta.countRep"><br> -->
+        <!-- <input type="reset"> -->
+    <button @click="agregarTarea">Agregar Tarea</button>
+    
+    <button @click="updateListaBeta">Traer Tarea</button>
     </form>
      
-    <button @click="agregarTarea">Agregar Tarea</button>
-    <button @click="updateLista">Traer Tarea</button>
-    <button @click="eliminarTarea">Eliminar Tarea</button>
+
     {{ mensajeError }}
 
     <ul id="lista">
-        <li v-for="tarea in listaTareasSemanalesApi" :key="tarea.id">
-              ID: {{ tarea.id }} | Descripcion: {{ tarea.desc }} | Prioridad: {{ tarea.prioridad }} | palabraClave:{{tarea.palabraClave}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.atrasada}} | cantRep: {{tarea.cantRep}}
+        <li v-for="tarea in listaTareasDiariasApi" :key="tarea.id">
+              ID: {{ tarea._id }} | Descripcion: {{ tarea.description }} | Prioridad: {{ tarea.priority }} | palabraClave: {{tarea.keyWords}} | motiv: {{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | isDaily: {{tarea.meta.isDaily}} | cantRep: {{tarea.meta.countRep}}
         </li>
     </ul>
 </div>
@@ -29,21 +46,23 @@
 <script>
 import {useStore} from '../store/storeTareas.js'
 import {storeToRefs} from 'pinia'
+import taskmodel from '../models/taskmodel.js'
 
 export default {
     setup(){
         const store = useStore()
-        const {listaTareasSemanales} = storeToRefs(store)
+        const {listaTareasDiarias} = storeToRefs(store)
 
         return{
-            store,listaTareasSemanales
+            store,listaTareasDiarias
         }
     },
     data(){
         return{
-            listaTareasSemanalesApi: [],
+            listaTareasDiariasApi: [],
+            listaTareasDiariasApiOrdenada:[],
             mensajeError: '',
-            newTarea:{id:0, desc:'', prioridad:0, palabraClave:'', motiv:'false', atrasada:'0',cantRep:'0'}
+            newTarea:{_id:0,tittle:'Agregar Titulo', description:'Descripcion',keyWords: [], priority: 1, motiv:true,meta:{ completed: false, isDelayed:false, isDaily: false, countRep:0}}
         }
     },
     created: async function (){
@@ -58,28 +77,62 @@ export default {
         async agregarTarea(){
             try{
                 const tarea = {...this.newTarea}
-                await this.store.setTareasSemanales(tarea)
+                const rta = this.store.setTareasDiarias(tarea)
                 this.updateLista()
             }catch(err){
-                this.errMensaje(err)
+                console.log(err);
+                this.mensajeError = 'Tarea Diaria,Hubo un error'
             }
         },
-        errMensaje (err){
-                console.log(err);
-                this.mensajeError = 'Hubo un error'
-        },
-        eliminarTarea(){
-            console.log('llego al metodo');
-            this.store.agregarTareaSemanales({...this.newTarea})
+       eliminarTarea(id){
+            this.store.borrarTareaDiaria(id)
         },
         async updateLista (){
-            const rta = await this.store.getTareasSemanales()
-            this.listaTareasSemanalesApi = rta.data
+            const rta = await this.store.getTareasDiarias()
+            this.listaTareasDiariasApi = await rta.data
+            //this.listaTareasDiariasApiOrdenada = await this.store.setOrderTareasDiarias({...this.listaTareasDiariasApi})
+            this.listaTareasDiariasApiOrdenada = this.listaTareasDiariasApi
+            this.updateListaBeta()
+        },
+        async updateListaBeta (){
+            this.listaTareasDiariasApi  = []
         }
     }
 }
 </script>
 
-<style>
 
+<style lang="scss" scoped>
+
+#tareas{
+     position:fixed;
+    // top: 0;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+    // z-index: 99;
+display:flex;
+    // display: flex;
+    // align-items: center;
+    // justify-content:center;
+}
+.formulario{
+    background: rgba(23, 38, 78, 0.708);
+    border-radius: 30px;
+  flex-direction: column;
+  align-items: center;
+  //justify-content: center;
+  display: flex;
+
+
+}
+
+button{
+    margin-top: 20px;
+    width: 200px;
+    height: 38px;
+    background: gray;
+    border-radius: 30px;
+    cursor:pointer;
+}
 </style>
