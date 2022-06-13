@@ -9,7 +9,7 @@ export const userStore = defineStore('main', {
     state: () => {
         return { 
             user: {},
-            isLogged: false
+            isLogged: true
         }
     },
     actions: {

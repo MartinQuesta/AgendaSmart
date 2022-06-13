@@ -11,8 +11,11 @@ export const useStore = defineStore('main', {
                  listaTareasOrdenadas: [] }
     },
     actions: {
-        getTareasDiarias(userID){
-            return this.listaTareasDiaria = apiCRUD.getTareasDiaras(userID)
+        async getTareasDiarias(userID){
+            return await apiCRUD.getTareasDiaras(userID)
+            // this.listaTareasDiaria = this.listaTareasDiaria.data
+            // console.log(this.listaTareasDiaria);
+            // return this.listaTareasDiaria
         },
         getTareasSemanales(){
             return this.listaTareasSemanales = apiCRUD.getTareasSemanales()

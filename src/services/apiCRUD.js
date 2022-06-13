@@ -11,13 +11,17 @@ const apiClient = Axios.create({
 })
 
 export default{
-    async getTareasDiaras(userID){
+    getTareasDiaras(userID){
         let res
         console.log('apiCRUD: GET-TAREAS');
-        await apiClient.get('/api/tareas/'+userID)
+        console.log(userID);
+        //fetch(
+        apiClient.get('/api/tareas/'+userID)//)
         .then(response => {
             console.log('ANDUVO');
+            console.log(response.data);
             res = response;
+            return response.data;
         })
         .catch(err => {
             console.log('apiCRUD - SetTareas HAY ERROR');
@@ -26,8 +30,6 @@ export default{
             console.error(err);
             res = err
         })
-        console.log(res);
-        return res
     },
     setTareasDiarias(tarea){
         fetch(apiClient.post('/api/tareas', tarea))

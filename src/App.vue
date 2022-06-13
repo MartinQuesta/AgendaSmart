@@ -8,27 +8,16 @@
 
 <template>
     <div>
-      {{ isLogged }}
-    
-      <div v-if="!isLogged">
+      <p>
         <router-link to="/">| Home | </router-link>
-        <router-link to="/about"> Go to About | </router-link>
         <router-link to="/login"> Login |</router-link>
         <router-link to="/register"> Register |</router-link>
-      </div>
-      <div v-if="isLogged">
-        <router-link to="/">| Home | </router-link>
-        <router-link to="/about"> Go to About | </router-link>
         <router-link to="/tareas"> Tareas</router-link>
         <router-link to="/gestiontarea"> | Gestion Tareas |</router-link>
-        <router-link to="/carritodetareas"> Lista de Tareas |</router-link>
-      </div>
+        <router-link to="/listadetareas"> Lista de Tareas |</router-link>
+        <router-link to="/about"> Go to About | </router-link>
+      </p>
       
-    <!-- `<router-link>` will render an `<a>` tag with the correct `href` attribute -->
-       
-        
-
-    
   <router-view></router-view>
     </div>
 

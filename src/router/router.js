@@ -7,7 +7,7 @@ import Usuario from '../components/Usuario.vue'
 import NotFound from '../components/NotFound.vue'
 import TareasDiarias from '../components/TareasDiarias.vue'
 import TareasSemanales from '../components/TareasSemanales.vue'
-import CarritoDeTareas from '../components/carritoDeTareas.vue'
+import ListaDeTareas from '../components/ListaDeTareas.vue'
 import Login from '../components/Login.vue'
 import Logout from '../components/Logout.vue'
 import Register from '../components/Register.vue'
@@ -22,7 +22,7 @@ const routes = [
     { path: '/tareassemanales', component: TareasSemanales},
     { path: '/gestiontarea', component: GestionTareas},
     { path: '/usuario/:id', component: Usuario},
-    { path: '/carritodetareas', component: CarritoDeTareas},
+    { path: '/listadetareas', component: ListaDeTareas},
     { path: '/logout', component: Logout}
     
   ]

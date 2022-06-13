@@ -2,18 +2,6 @@
     <h2>Tareas Diarias</h2>
   
 <div id="tareas">
-        <ul id="lista">
-        <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id"></li>
-              <li>Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | </li>
-              <li> Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}</li>
-              <li>UserID: {{tarea.meta.userData.userID}} </li>
-            <button @click="eliminarTarea(tarea._id)">Anular Tarea</button>
-        
-        
-        <li>
-            
-        </li>
-    </ul>
     <!-- <form class="formulario" action="agregarTarea"> -->
     <form class="formulario" @submit.prevent>
 
@@ -34,9 +22,19 @@
     
     <button @click="updateLista">Traer Tarea</button>
     </form>
-     
 
     {{ mensajeError }}
+<!-- 
+    <ul id="lista">
+        <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id"></li>
+              <li>Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | </li>
+              <li> Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}</li>
+              <li>UserID: {{tarea.meta.userData.userID}} </li>
+            <button @click="eliminarTarea(tarea._id)">Anular Tarea</button>
+        <li>
+            
+        </li>
+    </ul> -->
 
     <ul id="lista">
         <li v-for="tarea in listaTareasDiariasApi" :key="tarea.id">
@@ -50,13 +48,14 @@
 <script>
 import {useStore} from '../store/storeTareas.js'
 import {storeToRefs} from 'pinia'
+import { userStore } from '../store/user.js'
 import taskmodel from '../models/taskmodel.js'
 
 export default {
     setup(){
         const store = useStore()
         const {listaTareasDiarias} = storeToRefs(store)
-
+        
         return{
             store,listaTareasDiarias
         }
@@ -66,7 +65,8 @@ export default {
             listaTareasDiariasApi: [],
             listaTareasDiariasApiOrdenada:[],
             mensajeError: '',
-            newTarea:{_id:0,tittle:'Titulo', description:'Descripcion',keyWords: [], priority: 1, motiv:true,meta:{ completed: false, isDelayed:false, isDaily: true, countRep:0, userData:{userID:'user2',userToken:'0101'}}}
+            newTarea:{_id:0,tittle:'Titulo', description:'Descripcion',keyWords: [], priority: 1, motiv:true,meta:{ completed: false, isDelayed:false, isDaily: true, countRep:0, userData:{userID:'user2',userToken:'0101'}}},
+            isLogged : true
         }
     },
     created: async function (){
@@ -87,8 +87,6 @@ export default {
                 console.log(err);
                 this.mensajeError = 'Tarea Diaria,Hubo un error'
             }
-                this.updateLista()
-
         },
        eliminarTarea(id){
             const userID = this.newTarea.meta.userData.userID
@@ -96,15 +94,16 @@ export default {
         },
         async updateLista (){
             const tarea = {...this.newTarea}
-            console.log(tarea.meta.userData.userID);
             const userId = tarea.meta.userData.userID;
-            const rta = await this.store.getTareasDiarias(userId)
-            console.log(rta);
-            this.listaTareasDiariasApiOrdenada = rta.data
+            console.log(userId);
+            // const rta 
+            this.listaTareasDiariasApiOrdenada = await this.store.getTareasDiarias(userId)
+            // console.log(rta);
+            // this.listaTareasDiariasApiOrdenada = rta
             this.updateListaBeta()
         },
         async updateListaBeta (){
-            this.listaTareasDiariasApi  = []
+            this.listaTareasDiarias  = this.listaTareasDiariasApiOrdenada
         },
         filtroTareasDiarias(tareas){
             
