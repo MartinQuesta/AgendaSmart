@@ -11,8 +11,8 @@ export const useStore = defineStore('main', {
                  listaTareasOrdenadas: [] }
     },
     actions: {
-        getTareasDiarias(){
-            return this.listaTareasDiaria = apiCRUD.getTareasDiaras()
+        getTareasDiarias(userID){
+            return this.listaTareasDiaria = apiCRUD.getTareasDiaras(userID)
         },
         getTareasSemanales(){
             return this.listaTareasSemanales = apiCRUD.getTareasSemanales()
@@ -22,8 +22,8 @@ export const useStore = defineStore('main', {
             console.log(newList);
             return newList
             },
-        borrarTareaDiaria(id){
-            return apiCRUD.borrarTareaDiaria(id)
+        borrarTareaDiaria(userID,id){
+            return apiCRUD.borrarTareaDiaria(userID,id)
             },
         setTareasSemanales(tarea){
             return apiCRUD.setTareasSemanales(tarea)
