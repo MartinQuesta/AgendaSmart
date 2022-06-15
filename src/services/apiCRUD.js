@@ -58,8 +58,7 @@ export default{
         return apiClient.post('/api/settareas/semanales', tarea)
     },
     */
-    setOrderTareasDiarias(lista){
-        console.log(`apiCRUD Ordenadas:${lista}`);
+    setOrderTareasDiarias(){
         return apiClient.get('/api/lists')
     },
     setUser(user){

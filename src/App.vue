@@ -23,7 +23,7 @@
 
 </template>
 
-<script>
+<!-- <script>
 import {userStore} from '../src/store/user.js'
 import {storeToRefs} from 'pinia'
 
@@ -41,7 +41,7 @@ export default {
     
 }
 
-</script>
+</script> -->
 
 <style>
 @import './assets/base.css';

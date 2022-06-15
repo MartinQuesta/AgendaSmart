@@ -24,7 +24,7 @@
     </form>
 
     {{ mensajeError }}
-<!-- 
+
     <ul id="lista">
         <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id"></li>
               <li>Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | </li>
@@ -34,7 +34,7 @@
         <li>
             
         </li>
-    </ul> -->
+    </ul>
 
     <ul id="lista">
         <li v-for="tarea in listaTareasDiariasApi" :key="tarea.id">
@@ -96,10 +96,9 @@ export default {
             const tarea = {...this.newTarea}
             const userId = tarea.meta.userData.userID;
             console.log(userId);
-            // const rta 
-            this.listaTareasDiariasApiOrdenada = await this.store.getTareasDiarias(userId)
-            // console.log(rta);
-            // this.listaTareasDiariasApiOrdenada = rta
+            const rta = await this.store.getTareasDiarias(userId)
+            console.log(rta);
+            this.listaTareasDiariasApiOrdenada = rta
             this.updateListaBeta()
         },
         async updateListaBeta (){

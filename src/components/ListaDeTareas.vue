@@ -49,8 +49,21 @@ export default {
     },
     methods:{
         async updateLista (){
-            const rta = await this.store.getTareasDiarias()
-            this.listaTareasDiariasApi = rta.data
+            const rta = await this.store.getTareasDiarias('jobs')
+            this.listaTareasDiarias = rta
+            this.updateListaBeta()
+        },
+        async updateListaBeta() {
+            const rta = await this.store.setOrderTareasDiarias();
+            console.log("aquiiii DATAAAAA");
+            console.log(rta.data.data);
+            this.listaTareasDiariasApi = await rta.data.data;
+            this.listaTareasDiarias = this.listaTareasDiariasApi;
+            // this.listaTareasDiariasApiOrdenada = 
+            //await this.store.setOrderTareasDiarias({...this.listaTareasDiariasApi})
+            this.listaTareasDiariasApi = [];
+            //this.listaTareasDiariasApi = []
+            //this.listaTareasDiariasApi = this.listaTareasApiOrdenada
         }        
     }
 }
