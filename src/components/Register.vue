@@ -37,7 +37,7 @@ export default {
   },
   data() {
     return {
-      user : {nombre:"Nombre1", apellido:"apellido1", edad: 20, email: "mail1@mail.com", password: "123456", role:"ADMIN"},
+      user : {nombre:"Nombre1", apellido:"apellido1", edad: 20, email: "mail1@mail.com", password: "123456", role:"ADMIN", token:'token'},
       mensajeDeError : ''
     }
   },
@@ -46,7 +46,8 @@ export default {
         try {
           const user = {...this.user}               
           const rta = this.store.setUser(user)   
-                       
+          this.$router.push('/login')
+          
         } catch(e) {
           this.mensajeDeError = 'Se produjo un error'
         }

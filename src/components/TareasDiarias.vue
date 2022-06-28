@@ -1,46 +1,46 @@
 <template>
+        <router-link to="/tareas">| Tareas</router-link><br>
+
     <h2>Tareas Diarias</h2>
   
 <div id="tareas">
     <!-- <form class="formulario" action="agregarTarea"> -->
+        {{isLogged}}
     <form class="formulario" @submit.prevent>
 
         <h3>Agregar Tarea:</h3>
         <!-- ID: <input type="number" v-model="newTarea._id"><br> -->
-        Titulo: <input type="text" v-model="newTarea.tittle"><br>
-        Descripcion: <input type="text" v-model="newTarea.description"><br>
+        Titulo: <input type="text" v-model="newTarea.tittle">
+        Descripcion: <input type="text" v-model="newTarea.description">
         Prioridad: <input type="number" id='priority' v-model="newTarea.priority">
-        <!-- <input type="range" min='1' max='10' v-model="newTarea.priority"><br> -->
-        Palabras Claves: <input type="text" v-model="newTarea.keyWords"><br>
-        motivado: <input type="checkbox" value='true' v-model="newTarea.motiv"><br>
-        isDaily: <input type="checkbox" value='true' v-model="newTarea.meta.isDaily"><br>
+        <input type="range" min='1' max='10' v-model="newTarea.priority">
+        Palabras Claves: <input type="text" v-model="newTarea.keyWords">
+        motivado: <input type="checkbox" value='true' v-model="newTarea.motiv">
+        isDaily: <input type="checkbox" value='true' v-model="newTarea.meta.isDaily">
         Repeticiones: <input type="number" id='countRep' v-model="newTarea.meta.countRep">
+        <input type="range" min='0' max='5' v-model="newTarea.meta.countRep"><br>
         Usuario: <input type="text" id='userID' v-model="newTarea.meta.userData.userID">
-        <!-- <input type="range" min='0' max='5' v-model="newTarea.meta.countRep"><br> -->
-        <!-- <input type="reset"> -->
+        completada: <input type="checkbox" value='true' v-model="newTarea.meta.completed">
+
+
+    <input type="reset">
     <button @click="agregarTarea">Agregar Tarea</button>
-    
     <button @click="updateLista">Traer Tarea</button>
     </form>
 
     {{ mensajeError }}
-
-    <ul id="lista">
-        <li v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea.id"></li>
-              <li>Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }} | </li>
-              <li> Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | motiv:{{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | cantRep: {{tarea.meta.countRep}}</li>
-              <li>UserID: {{tarea.meta.userData.userID}} </li>
-            <button @click="eliminarTarea(tarea._id)">Anular Tarea</button>
-        <li>
+   <div id="listContainer">
+        <ul id="list" v-for="tarea in listaTareasDiariasApiOrdenada" :key="tarea._id">
+         Titulo: {{tarea.tittle}}
+              <li id="itemList">Fecha: {{ tarea.date }} | Descripcion: {{ tarea.description }}  </li>
+              <li id="itemList"> Prioridad: {{ tarea.priority }} | palabraClave:{{tarea.keyWords}} | Completed: {{tarea.meta.completed}} | cantRep: {{tarea.meta.countRep}}</li>
+              <li id="itemList">UserID: {{tarea.meta.userData.userID}} </li>
+            <button id="redButton" @click="eliminarTarea(tarea._id)">Anular Tarea</button>
+            <button id="greenButton" @click="modificarTarea(tarea._id)">Modificar Tarea</button><br>
+                __________________________________________________
             
-        </li>
-    </ul>
-
-    <ul id="lista">
-        <li v-for="tarea in listaTareasDiariasApi" :key="tarea.id">
-              ID: {{ tarea._id }} | Descripcion: {{ tarea.description }} | Prioridad: {{ tarea.priority }} | palabraClave: {{tarea.keyWords}} | motiv: {{tarea.motiv}} | atrasada: {{tarea.meta.isDelayed}} | isDaily: {{tarea.meta.isDaily}} | cantRep: {{tarea.meta.countRep}}
-        </li>
-    </ul>
+        </ul>
+    </div>
 </div>
 
 </template>
@@ -51,13 +51,16 @@ import {storeToRefs} from 'pinia'
 import { userStore } from '../store/user.js'
 import taskmodel from '../models/taskmodel.js'
 
+
 export default {
     setup(){
         const store = useStore()
         const {listaTareasDiarias} = storeToRefs(store)
+        const storeUSer = useStore()
+        const {isLogged} = storeUSer
         
         return{
-            store,listaTareasDiarias
+            store,listaTareasDiarias, isLogged
         }
     },
     data(){
@@ -71,7 +74,7 @@ export default {
     },
     created: async function (){
         try{
-            this.updateLista()
+            await this.updateLista()
         }catch(err){
             console.log(err);
             this.mensajeError = 'Hubo un error'
@@ -91,15 +94,26 @@ export default {
        eliminarTarea(id){
             const userID = this.newTarea.meta.userData.userID
             this.store.borrarTareaDiaria(userID,id)
+            this.updateLista()
+        },
+        modificarTarea(id){
+            const tarea = {...this.newTarea}
+            tarea.meta.completed = true;
+            this.store.modificarTarea(id,tarea)
+            this.updateLista()
         },
         async updateLista (){
+            try{
             const tarea = {...this.newTarea}
             const userId = tarea.meta.userData.userID;
-            console.log(userId);
             const rta = await this.store.getTareasDiarias(userId)
-            console.log(rta);
-            this.listaTareasDiariasApiOrdenada = rta
+            console.log(rta.data);
+            this.listaTareasDiariasApiOrdenada = await rta.data
             this.updateListaBeta()
+            }catch(err){
+                console.log(err);
+                this.mensajeError = 'Hubo un error en Update'
+            }
         },
         async updateListaBeta (){
             this.listaTareasDiarias  = this.listaTareasDiariasApiOrdenada
@@ -113,15 +127,36 @@ export default {
 
 
 <style lang="scss" scoped>
+#listContainer{
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
 
+}
+#itemList{
+    padding-left: 1cm;
+    list-style: none;
+    background: rgba(23, 38, 78, 0.708);
+
+}
+#redButton{
+    background: rgba(144, 10, 0, 0.708);
+    
+    //border-radius: 30px;
+}
+#greenButton{
+    background: rgba(2, 112, 13, 0.708);
+
+}
 #tareas{
      position:fixed;
+     overflow: auto;
     // top: 0;
     // left: 0;
     // right: 0;
     // bottom: 0;
     // z-index: 99;
-display:flex;
+    display:flex;
     // display: flex;
     // align-items: center;
     // justify-content:center;
@@ -133,7 +168,7 @@ display:flex;
   align-items: center;
   //justify-content: center;
   display: flex;
-
+overflow: auto
 
 }
 

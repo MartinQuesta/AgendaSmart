@@ -8,6 +8,8 @@
     <div v-else>
         <h2>Tareas Semanales</h2>
     </div> -->
+        <router-link to="/tareas"> Tareas</router-link>
+
     <button @click="() => togglePopup('buttonTrigger')">Start Pomodoro</button>
     <Pomodoro class="popup" v-if="pomodoroTriggers.buttonTrigger" 
     :togglePopup = "() => togglePopup('buttonTrigger')">

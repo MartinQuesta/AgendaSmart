@@ -8,22 +8,25 @@
 
 <template>
     <div>
-      <p>
+        <!-- <div v-show='isLogged'> -->
         <router-link to="/">| Home | </router-link>
         <router-link to="/login"> Login |</router-link>
         <router-link to="/register"> Register |</router-link>
+        <!-- </div> -->
+        <!-- <div v-show='isLogged'> -->
         <router-link to="/tareas"> Tareas</router-link>
         <router-link to="/gestiontarea"> | Gestion Tareas |</router-link>
         <router-link to="/listadetareas"> Lista de Tareas |</router-link>
         <router-link to="/about"> Go to About | </router-link>
-      </p>
+        <router-link to="/logout"> Logout </router-link>
+        <!-- </div> -->
       
-  <router-view></router-view>
+        <router-view></router-view>
     </div>
 
 </template>
 
-<!-- <script>
+<script>
 import {userStore} from '../src/store/user.js'
 import {storeToRefs} from 'pinia'
 
@@ -41,7 +44,7 @@ export default {
     
 }
 
-</script> -->
+</script>
 
 <style>
 @import './assets/base.css';

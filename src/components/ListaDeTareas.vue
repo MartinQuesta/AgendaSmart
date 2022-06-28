@@ -1,21 +1,22 @@
 <template>
   
 <div>
-    <h2>Lista de Tareass</h2>
-    {{listaTareasDiariaApi}}
+    <h2>Metricas sobre tus Tareas</h2>
+        <router-link to="/tareas"> Volver a Tareas</router-link><br>
+       User: {{user}} <br>
+       Token: {{token}}
+<ul id="lista">
+    Total de Tareas Completadas :{{TareasDiaria.data.completedJob}}<br>
+    Tarea mas antigua Pendiente: {{TareasDiaria.data.earlyDate}}<br>
+    Total de Tareas: {{TareasDiaria.data.qnty}}<br>
+</ul>
     <button @click="updateLista">Traer Tareas </button>
 
-    <ul id="lista">
-        <li v-for="tarea in listaTareasDiariasApi" :key="tarea.id">
-               ID: {{ tarea.id }} | Descripcion: {{ tarea.desc }} | Prioridad: {{ tarea.prioridad }}
+    <!-- <ul id="lista">
+        <li v-for="tarea in listaTareasDiaria" :key="tarea.id">
+               Prioridad: {{ tarea.priority }} | Descripcion: {{ tarea.description }} | tittle: {{ tarea.tittle }}
         </li>
-    </ul>
-
-     <ul id="lista">
-        <li v-for="tarea in listaTareasSemanales" :key="tarea.id">
-               ID: {{ tarea.id }} | Descripcion: {{ tarea.desc }} | Prioridad: {{ tarea.prioridad }}
-        </li>
-    </ul>
+    </ul> -->
 </div>
 </template>
 
@@ -27,8 +28,10 @@ import {storeToRefs} from 'pinia'
 export default {
     data(){
         return{
-            listaTareasDiariasApi:[],
-            newTarea:{id:0, desc:'', prioridad:0}
+            TareasDiaria:{},
+            user:'',
+            token:'',
+            newTarea:{id:0, desc:'', prioridad:0},
         }
     },
     setup(){
@@ -49,22 +52,14 @@ export default {
     },
     methods:{
         async updateLista (){
-            const rta = await this.store.getTareasDiarias('jobs')
-            this.listaTareasDiarias = rta
-            this.updateListaBeta()
-        },
-        async updateListaBeta() {
-            const rta = await this.store.setOrderTareasDiarias();
-            console.log("aquiiii DATAAAAA");
-            console.log(rta.data.data);
-            this.listaTareasDiariasApi = await rta.data.data;
-            this.listaTareasDiarias = this.listaTareasDiariasApi;
-            // this.listaTareasDiariasApiOrdenada = 
-            //await this.store.setOrderTareasDiarias({...this.listaTareasDiariasApi})
-            this.listaTareasDiariasApi = [];
-            //this.listaTareasDiariasApi = []
-            //this.listaTareasDiariasApi = this.listaTareasApiOrdenada
-        }        
+            const rta = await this.store.getStatistics()
+            console.log(rta);
+            this.TareasDiaria = rta
+            this.user = this.store.getUser()
+            this.token = this.store.getToken()
+            //this.user = localStorage.getItem('mail')
+            //this.updateListaBeta()
+        },      
     }
 }
 </script>

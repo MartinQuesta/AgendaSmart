@@ -9,7 +9,8 @@ export const userStore = defineStore('main', {
     state: () => {
         return { 
             user: {},
-            isLogged: true
+            isLogged: '',
+            userToken:''
         }
     },
     actions: {
@@ -21,6 +22,10 @@ export const userStore = defineStore('main', {
         },
         setUser(user){
             return apiCRUD.setUser(user)
+        },
+        userLogout(){
+            this.isLogged = false
+            localStorage.removeItem('token')
         }
     },
     // other options...
